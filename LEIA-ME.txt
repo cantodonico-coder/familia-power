@@ -1,0 +1,32 @@
+FAMÍLIA POWER — Gestão de Compromissos e Despesas
+Como publicar
+
+1. Envie a pasta inteira para uma hospedagem estática com HTTPS
+   (GitHub Pages, Netlify, Cloudflare Pages — todos gratuitos).
+   Mantenha as pastas icons/, fonts/ e vendor/.
+2. Abra o endereço no Chrome do Android > menu ⋮ > "Instalar app"
+   (ou Configurações do app > Instalar na tela inicial).
+3. Ao publicar mudanças, altere VERSAO no sw.js (ex.: familia-v2).
+
+Observações
+- Dados: ficam no navegador do aparelho (localStorage). Faça backup em
+  Configurações > Exportar dados.
+- Leitor de notas: Tesseract.js (licença Apache 2.0), servido pelo próprio
+  app em vendor/. Baixa ~5,5 MB no primeiro uso e depois funciona offline.
+  A foto nunca sai do celular e não é guardada.
+- Avisos: aparecem com o app aberto ou em segundo plano. Para aviso com o
+  celular bloqueado, use "Salvar no calendário" no compromisso.
+- Abrir o index.html direto do arquivo (file://) não ativa o modo offline;
+  use a hospedagem.
+
+SINCRONIZAR COM A FAMÍLIA (GitHub)
+1. Crie um repositório PRIVADO chamado familia-dados (marque "Add a README").
+2. GitHub > Settings > Developer settings > Personal access tokens >
+   Fine-grained tokens > Generate new token:
+   - Repository access: Only select repositories > familia-dados
+   - Permissions > Contents: Read and write
+   - Copie o token (github_pat_...).
+3. No app: ⚙ > Conectar ao GitHub > usuário, familia-dados, token.
+4. ⚙ > Convidar para a família > envie o link para quem mora com você.
+O app recusa repositório público. Quem tem o link/token vê e altera os dados:
+se perder o celular, apague o token no GitHub e gere outro.

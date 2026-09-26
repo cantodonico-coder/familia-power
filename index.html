@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Família Power — Gestão de Compromissos e Despesas.">
+  <meta name="theme-color" content="#ECEAF4" data-padrao="#ECEAF4" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0D0A18" data-padrao="#0D0A18" media="(prefers-color-scheme: dark)">
+  <title>Família Power — Gestão de Compromissos e Despesas</title>
+  <meta name="application-name" content="Família Power">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="preload" href="fonts/figtree.woff2" as="font" type="font/woff2" crossorigin>
+  <script>try{var t=localStorage.getItem("familia.tema");if(t&&t!=="power")document.documentElement.setAttribute("data-tema",t)}catch(e){}</script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="aurora" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+  <div class="app">
+    <header class="topbar">
+      <div>
+        <h1 class="brand">Família <span>Power</span></h1>
+        <p class="hoje-label" id="hojeLabel"></p>
+        <p class="sync-status" id="syncStatus" role="status" hidden></p>
+      </div>
+      <button class="icon-btn" id="btnConfig" aria-label="Configurações">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>
+      </button>
+    </header>
+
+    <main>
+      <!-- AGENDA -->
+      <section class="view" id="view-agenda" aria-label="Agenda">
+        <div class="toolbar">
+          <div class="seg" id="agendaModo" role="tablist" aria-label="Visualização">
+            <button type="button" role="tab" data-modo="lista">Lista</button>
+            <button type="button" role="tab" data-modo="semana">Semana</button>
+            <button type="button" role="tab" data-modo="mes">Mês</button>
+          </div>
+          <label class="busca">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input id="busca" type="search" placeholder="Pesquisar compromisso" autocomplete="off" enterkeyhint="search">
+          </label>
+          <div class="chips" id="agendaFiltros" aria-label="Filtros"></div>
+        </div>
+        <div id="agendaConteudo"></div>
+      </section>
+
+      <!-- FINANCEIRO -->
+      <section class="view" id="view-fin" aria-label="Financeiro">
+        <div class="nav-per" id="finNav"></div>
+        <dl class="resumo" id="finResumo" aria-live="polite" aria-label="Resumo do mês"></dl>
+        <div id="finGastos"></div>
+        <div id="finLista"></div>
+      </section>
+    </main>
+
+    <div class="fab-row" id="fabAgenda">
+      <button type="button" class="fab" id="btnNovoEvento">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Novo
+      </button>
+    </div>
+    <div class="fab-row" id="fabFin" hidden>
+      <button type="button" class="fab fab-sec" id="btnLerNota">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8a2 2 0 0 1 2-2h2l1.5-2h5L16 6h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><circle cx="12" cy="12.5" r="3.5"/></svg>Ler nota
+      </button>
+      <button type="button" class="fab" id="btnNovoLanc">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Novo
+      </button>
+    </div>
+
+    <nav class="tabbar" aria-label="Seções">
+      <button type="button" class="tab" data-tab="agenda">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
+        <span>Agenda</span>
+      </button>
+      <button type="button" class="tab" data-tab="fin">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10h18M16 14.5h2"/></svg>
+        <span>Financeiro</span>
+      </button>
+    </nav>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <datalist id="dl-pessoas"></datalist>
+  <datalist id="dl-categorias"></datalist>
+
+  <input type="file" id="fileCamera" accept="image/*" capture="environment" hidden>
+  <input type="file" id="fileGaleria" accept="image/*" hidden>
+  <input type="file" id="fileBackup" accept="application/json,.json" hidden>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
