@@ -1,0 +1,33 @@
+name: Avisos da família
+# Envia os lembretes para os celulares, mesmo com o app fechado.
+# A cada 30 minutos, das 06:00 às 23:30 (horário de Brasília).
+on:
+  schedule:
+    - cron: '*/30 9-23 * * *'
+    - cron: '*/30 0-2 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: avisos
+jobs:
+  avisar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Preparar
+        run: npm install --no-save --silent --no-audit --no-fund web-push@3
+      - name: Enviar avisos
+        run: node .github/avisos.js
+      - name: Guardar avisos já enviados
+        run: |
+          if [ -n "$(git status --porcelain avisos-enviados.json)" ]; then
+            git config user.name "Família Power"
+            git config user.email "avisos@familia-power.app"
+            git add avisos-enviados.json
+            git commit -q -m "Avisos enviados"
+            git pull -q --rebase && git push -q || true
+          fi

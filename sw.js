@@ -1,14 +1,24 @@
 'use strict';
 
 /* Suba a versão ao publicar mudanças no app. */
-const VERSAO = 'familia-v7';
+const VERSAO = 'familia-v11';
 const CACHE_OCR = 'familia-ocr-v1';
 
 const ARQUIVOS = [
   './',
   'index.html',
   'style.css',
-  'app.js',
+  'js/nucleo.js',
+  'js/agenda.js',
+  'js/financeiro.js',
+  'js/cozinha.js',
+  'js/ocr.js',
+  'js/sincronizacao.js',
+  'js/avisos.js',
+  'js/configuracoes.js',
+  'js/efeitos.js',
+  'js/bloqueio.js',
+  'js/app.js',
   'manifest.json',
   'fonts/figtree.woff2',
   'icons/icon-192.png',
@@ -28,7 +38,7 @@ self.addEventListener('install', (e) => {
 self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys()
-      .then((chaves) => Promise.all(chaves.filter((k) => k !== VERSAO && k !== CACHE_OCR).map((k) => caches.delete(k))))
+      .then((chaves) => Promise.all(chaves.filter((k) => k !== VERSAO && k !== CACHE_OCR && k !== CACHE_COMPARTILHADO).map((k) => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
@@ -56,12 +66,40 @@ async function primeiroRede(req) {
   }
 }
 
+/* Foto compartilhada da galeria ("Compartilhar → Família Power"): guarda e abre a leitura da nota. */
+const CACHE_COMPARTILHADO = 'familia-compartilhado';
+async function receberCompartilhamento(req) {
+  try {
+    const dados = await req.formData();
+    const arquivo = dados.get('imagem');
+    if (arquivo && arquivo.size) {
+      const cache = await caches.open(CACHE_COMPARTILHADO);
+      await cache.put('imagem', new Response(arquivo, { headers: { 'Content-Type': arquivo.type || 'image/jpeg' } }));
+      return Response.redirect('./index.html?acao=nota-compartilhada', 303);
+    }
+  } catch { /* segue para o app */ }
+  return Response.redirect('./index.html', 303);
+}
+
 self.addEventListener('fetch', (e) => {
   const req = e.request;
+  if (req.method === 'POST' && new URL(req.url).pathname.endsWith('/compartilhar')) {
+    e.respondWith(receberCompartilhamento(req));
+    return;
+  }
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
   e.respondWith(url.pathname.includes('/vendor/') ? primeiroCache(req) : primeiroRede(req));
+});
+
+/* Aviso vindo do GitHub (app fechado) */
+self.addEventListener('push', (e) => {
+  let d = {};
+  try { d = e.data ? e.data.json() : {}; } catch { d = { titulo: e.data && e.data.text() }; }
+  e.waitUntil(self.registration.showNotification(d.titulo || 'Família Power', {
+    body: d.corpo || '', tag: d.tag, icon: 'icons/icon-192.png', badge: 'icons/icon-192.png', vibrate: [120, 60, 120],
+  }));
 });
 
 self.addEventListener('notificationclick', (e) => {

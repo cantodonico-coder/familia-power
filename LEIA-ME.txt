@@ -30,3 +30,25 @@ SINCRONIZAR COM A FAMÍLIA (GitHub)
 4. ⚙ > Convidar para a família > envie o link para quem mora com você.
 O app recusa repositório público. Quem tem o link/token vê e altera os dados:
 se perder o celular, apague o token no GitHub e gere outro.
+
+NOVIDADES
+- Contas fixas: marque "Conta fixa" num lançamento; o app cria o do próximo mês
+  como "a pagar". Contas a pagar aparecem na agenda (💸) no dia do vencimento,
+  com aviso às 09:00.
+- Atalhos: segure o ícone do app > Novo gasto / Ler nota / Lista de compras.
+- Galeria > Compartilhar > Família Power abre a leitura da nota (app instalado).
+- Cozinha: "arroz 2kg R$ 25,90" guarda o preço; "Finalizar compra" lança no Financeiro.
+- ⚙ > Versões anteriores: volta os dados a um momento anterior (desfazer).
+- ⚙ > Trocar token: o app avisa 7 dias antes de o token vencer.
+- ⚙ > Bloqueio com PIN: só neste aparelho; protege contra acesso casual.
+
+VERSÃO 11
+- Código dividido na pasta js/ (o app.js da raiz não é mais usado: pode apagar).
+- ⚙ > Você: seu nome. A família vê "por Nome" no que cada um registrar.
+- Cozinha > Cardápio da semana: Almoço e Jantar.
+- ⚙ > Avisos com o app fechado: o GitHub confere a agenda a cada 30 min
+  (06:00–23:30) e avisa os celulares. Para o app instalar isso sozinho, o token
+  precisa também da permissão "Workflows: Read and write". Sem ela, o app mostra
+  como enviar os 2 arquivos (pasta extras/) para o familia-dados.
+  Custo: grátis (usa cerca de 1.100 dos 2.000 minutos mensais do GitHub Actions
+  para repositórios privados).
