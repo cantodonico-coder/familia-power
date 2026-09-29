@@ -1,6 +1,7 @@
 'use strict';
 
-/* Família Power · Avisos com o app fechado (Web Push + GitHub Actions) */
+/* Família Power · Avisos com o app fechado (Web Push + GitHub Actions)
+   Desenvolvido por Nicosheik Labs · © 2026 */
 
 /* =========================================================
    AVISOS COM O APP FECHADO (Web Push + GitHub Actions no repositório privado)

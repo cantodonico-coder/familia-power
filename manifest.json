@@ -1,7 +1,7 @@
 {
   "name": "Família Power — Gestão de Compromissos e Despesas",
   "short_name": "Família Power",
-  "description": "Gestão de Compromissos e Despesas da família, com os dados no próprio celular.",
+  "description": "Gestão de Compromissos e Despesas da família, com os dados no próprio celular. Desenvolvido por Nicosheik Labs.",
   "lang": "pt-BR",
   "start_url": "./index.html",
   "scope": "./",

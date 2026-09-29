@@ -507,7 +507,8 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 
 /* ===== Cozinha ===== */
 #cozModo { margin: 6px 0 12px; }
-.add-item { display: flex; gap: 8px; position: sticky; top: var(--topo-h, 80px); z-index: 5; margin: 0 -16px; padding: 6px 16px 8px; background: color-mix(in srgb, var(--bg) 88%, transparent); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+.add-item { display: flex; gap: 8px; position: sticky; top: var(--topo-h, 80px); z-index: 5; margin: 0 -16px; padding: 6px 16px 8px; transition: background .3s; }
+.rolado .add-item { background: color-mix(in srgb, var(--bg) 88%, transparent); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
 .add-item .busca { flex: 1; }
 .add-item .btn { height: 48px; padding: 0 18px; border-radius: 16px; }
 .barra-acoes { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 14px 2px 4px; }
@@ -630,6 +631,12 @@ html.bloqueado body > :not(#tela-bloqueio):not(.aurora) { visibility: hidden; }
 .bloq-teclado [data-t="apagar"] { font-size: 24px; }
 
 .quem { margin: -4px 0 0; font-size: 12.5px; color: var(--text-secondary); }
+
+.creditos { margin: 22px 0 4px; padding-top: 16px; border-top: 1px solid var(--line); text-align: center; font-size: 13px; line-height: 1.5; color: var(--text-secondary); }
+.creditos b { color: var(--text-primary); }
+.creditos .assinatura { display: block; margin-top: 8px; font-size: 12px; letter-spacing: .02em; }
+.creditos .assinatura b { color: var(--brand-text); }
+.bloq-assinatura { margin-top: 18px !important; font-size: 12px; font-weight: 700; letter-spacing: .04em; color: var(--text-secondary); opacity: .8; }
 
 /* ===== Esqueleto (carregamento) ===== */
 .esqueleto { display: grid; gap: 12px; margin-top: 18px; }

@@ -1,6 +1,7 @@
 'use strict';
 
-/* Família Power · Bloqueio com PIN */
+/* Família Power · Bloqueio com PIN
+   Desenvolvido por Nicosheik Labs · © 2026 */
 
 /* =========================================================
    BLOQUEIO COM PIN (só neste aparelho)
@@ -55,6 +56,7 @@ const Bloqueio = {
           ? '<button type="button" class="bloq-texto" data-t="esqueci">Esqueci</button>'
           : t === 'apagar' ? '<button type="button" class="bloq-texto" data-t="apagar" aria-label="Apagar">⌫</button>'
           : `<button type="button" data-t="${t}">${t}</button>`).join('')}</div>
+        <p class="bloq-assinatura">${APP.desenvolvedora}</p>
       </div>`;
     document.body.appendChild(tela);
     const msg = $('.bloq-msg', tela), pontos = $$('.bloq-pontos i', tela);

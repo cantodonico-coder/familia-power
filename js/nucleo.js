@@ -1,9 +1,12 @@
 'use strict';
 
-/* Família Power · Núcleo: utilidades, datas, dinheiro, modelos, armazenamento, tema e interface base */
+/* Família Power · Núcleo: utilidades, datas, dinheiro, modelos, armazenamento, tema e interface base
+   Desenvolvido por Nicosheik Labs · © 2026 */
 
 
 /* ---------- Utilitários ---------- */
+const APP = { nome: 'Família Power', versao: '1.14', desenvolvedora: 'Nicosheik Labs' };
+
 const $ = (sel, raiz = document) => raiz.querySelector(sel);
 const $$ = (sel, raiz = document) => [...raiz.querySelectorAll(sel)];
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));

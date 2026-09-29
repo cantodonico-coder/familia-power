@@ -1,6 +1,7 @@
 'use strict';
 
-/* Família Power · Leitura de notas (OCR local) */
+/* Família Power · Leitura de notas (OCR local)
+   Desenvolvido por Nicosheik Labs · © 2026 */
 
 /* =========================================================
    OCR LOCAL (Tesseract.js servido pelo próprio app)

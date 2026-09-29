@@ -1,6 +1,7 @@
 'use strict';
 
-/* Família Power · Financeiro: resumo, gráfico, lançamentos e contas fixas */
+/* Família Power · Financeiro: resumo, gráfico, lançamentos e contas fixas
+   Desenvolvido por Nicosheik Labs · © 2026 */
 
 /* =========================================================
    FINANCEIRO

@@ -1,6 +1,7 @@
 'use strict';
 
-/* Família Power · Efeitos de toque */
+/* Família Power · Efeitos de toque
+   Desenvolvido por Nicosheik Labs · © 2026 */
 
 /* =========================================================
    EFEITOS: brilho sob o dedo, ondas, inclinação e profundidade

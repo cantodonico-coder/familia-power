@@ -1,6 +1,7 @@
 'use strict';
 
-/* Família Power · Cozinha: lista de compras e cardápio (almoço e jantar) */
+/* Família Power · Cozinha: lista de compras e cardápio (almoço e jantar)
+   Desenvolvido por Nicosheik Labs · © 2026 */
 
 /* =========================================================
    COZINHA: lista de compras e almoços da semana
@@ -284,7 +285,7 @@ const CozinhaUI = {
       html += `<p class="rotulo-sec">Compro sempre</p><div class="chips chips-freq">${freq.map((c) => `<button type="button" class="chip" data-freq="${esc(c.id)}">+ ${esc(c.nome)}</button>`).join('')}</div>`;
     }
     if (!ativos.length) {
-      html += AgendaUI.vazio('Lista vazia', 'Escreva um item acima ou use os almoços da semana para montar a lista.');
+      html += AgendaUI.vazio('Lista vazia', 'Escreva um item acima ou use o cardápio da semana para montar a lista.');
     }
     html += grupos.map(([s, l]) => `<section class="dia"><h3 class="dia-tit setor" style="--cor:${Cozinha.SETORES[s]}">${s}</h3><div class="painel">${l.map(linha).join('')}</div></section>`).join('');
     if (carrinho.length) {

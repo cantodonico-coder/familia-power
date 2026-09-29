@@ -1,6 +1,7 @@
 'use strict';
 
-/* Família Power · Backup e configurações */
+/* Família Power · Backup e configurações
+   Desenvolvido por Nicosheik Labs · © 2026 */
 
 /* =========================================================
    BACKUP E CONFIGURAÇÕES
@@ -106,7 +107,11 @@ const Config = {
         <div class="lista-opcoes">
           <button type="button" class="opcao perigo" data-acao="apagar"><span><b>Apagar dados</b><small>Remove tudo deste aparelho</small></span></button>
         </div>
-        <p class="rodape-nota"><b>Família Power</b><br>Gestão de Compromissos e Despesas<br>${Sync.cfg ? 'Seus dados ficam neste aparelho e no seu repositório privado do GitHub.' : 'Seus dados ficam somente neste aparelho.'}</p>`,
+        <p class="rodape-nota">${Sync.cfg ? 'Seus dados ficam neste aparelho e no seu repositório privado do GitHub.' : 'Seus dados ficam somente neste aparelho.'}</p>
+        <footer class="creditos">
+          <b>${APP.nome}</b> · versão ${APP.versao}<br>Gestão de Compromissos e Despesas
+          <span class="assinatura">Desenvolvido por <b>${APP.desenvolvedora}</b></span>
+        </footer>`,
     });
 
     folha.addEventListener('click', async (e) => {
