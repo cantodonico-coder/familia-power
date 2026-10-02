@@ -1,7 +1,7 @@
 'use strict';
 
 /* Família Power · Bloqueio com PIN
-   Desenvolvido por Nicosheik Labs · © 2026 */
+   Desenvolvido por Nicoshake Labs · © 2026 */
 
 /* =========================================================
    BLOQUEIO COM PIN (só neste aparelho)

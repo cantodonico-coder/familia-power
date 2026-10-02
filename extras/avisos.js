@@ -1,5 +1,5 @@
 'use strict';
-/* Família Power (desenvolvido por Nicosheik Labs) — envia os avisos da agenda e das contas para os celulares,
+/* Família Power (desenvolvido por Nicoshake Labs) — envia os avisos da agenda e das contas para os celulares,
    mesmo com o app fechado. Roda no GitHub Actions do repositório privado de dados.
    Não imprime dados da família no log: só contagens. */
 const fs = require('fs');
@@ -56,7 +56,7 @@ for (const ev of dados.eventos || []) {
   }
 }
 for (const l of dados.lancamentos || []) {
-  if (l.tipo !== 'despesa' || l.pago || l.data !== hoje) continue;
+  if (l.tipo !== 'despesa' || l.pago || l.evento || l.data !== hoje) continue;
   if (9 * 60 > agora || agora - 9 * 60 > JANELA) continue;
   avisos.push({ tag: `conta:${l.id}|${l.data}`, titulo: `Pagar ${l.descricao}`, corpo: `Vence hoje · ${reais(l.valor)}` });
 }

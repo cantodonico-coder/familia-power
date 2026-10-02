@@ -1,11 +1,11 @@
 'use strict';
 
 /* Família Power · Núcleo: utilidades, datas, dinheiro, modelos, armazenamento, tema e interface base
-   Desenvolvido por Nicosheik Labs · © 2026 */
+   Desenvolvido por Nicoshake Labs · © 2026 */
 
 
 /* ---------- Utilitários ---------- */
-const APP = { nome: 'Família Power', versao: '1.14', desenvolvedora: 'Nicosheik Labs' };
+const APP = { nome: 'Família Power', versao: '1.16', desenvolvedora: 'Nicoshake Labs' };
 
 const $ = (sel, raiz = document) => raiz.querySelector(sel);
 const $$ = (sel, raiz = document) => [...raiz.querySelectorAll(sel)];
@@ -163,6 +163,8 @@ const Modelo = {
       aviso: this.hora(o.aviso),
       obs: texto(o.obs, 1000),
       recorrencia: o.recorrencia in this.RECORRENCIAS ? o.recorrencia : 'nao',
+      valor: Number.isInteger(o.valor) && o.valor > 0 ? o.valor : null,
+      categoria: texto(o.categoria, 40),
       feitos: this.datas(o.feitos),
       excecoes: this.datas(o.excecoes),
       por: texto(o.por, 40),
@@ -185,6 +187,7 @@ const Modelo = {
       valor,
       pago: o.pago !== false,
       fixa: texto(o.fixa, 40),
+      evento: texto(o.evento, 40),
       por: texto(o.por, 40),
       atualizado: this.carimbo(o.atualizado),
     };

@@ -1,5 +1,5 @@
 FAMÍLIA POWER — Gestão de Compromissos e Despesas
-Desenvolvido por Nicosheik Labs
+Desenvolvido por Nicoshake Labs
 Como publicar
 
 1. Envie a pasta inteira para uma hospedagem estática com HTTPS
@@ -53,3 +53,7 @@ VERSÃO 11
   como enviar os 2 arquivos (pasta extras/) para o familia-dados.
   Custo: grátis (usa cerca de 1.100 dos 2.000 minutos mensais do GitHub Actions
   para repositórios privados).
+
+VERSÃO 1.16
+- Compromisso com "Valor (gasto)": vira despesa "a pagar" no Financeiro
+  (uma por repetição). Concluir o compromisso = pagar, e vice-versa.

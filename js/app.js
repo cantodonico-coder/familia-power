@@ -1,7 +1,7 @@
 'use strict';
 
 /* Família Power · Navegação e inicialização (carregar por último)
-   Desenvolvido por Nicosheik Labs · © 2026 */
+   Desenvolvido por Nicoshake Labs · © 2026 */
 
 /* =========================================================
    NAVEGAÇÃO E INICIALIZAÇÃO

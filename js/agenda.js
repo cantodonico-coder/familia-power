@@ -1,7 +1,7 @@
 'use strict';
 
 /* Família Power · Agenda: compromissos, recorrência, WhatsApp, calendário (.ics) e lembretes
-   Desenvolvido por Nicosheik Labs · © 2026 */
+   Desenvolvido por Nicoshake Labs · © 2026 */
 
 /* =========================================================
    AGENDA
@@ -45,7 +45,7 @@ const Agenda = {
   /* Contas a pagar (e contas fixas) aparecem na agenda no dia do vencimento. */
   contas() {
     return Store.dados.lancamentos
-      .filter((l) => l.tipo === 'despesa' && (!l.pago || l.fixa))
+      .filter((l) => l.tipo === 'despesa' && !l.evento && (!l.pago || l.fixa))
       .map((l) => ({
         id: 'conta:' + l.id, conta: l, titulo: `Pagar ${l.descricao}`, data: l.data, hora: '',
         responsavel: l.pessoa, local: Dinheiro.br(l.valor), aviso: '09:00', obs: '',
@@ -75,6 +75,7 @@ const Agenda = {
       if (!l) return false;
       l.pago = !l.pago;
       Store.tocar(l);
+      Vinculos.aoPagar(l);
       Store.salvar();
       return l.pago;
     }
@@ -83,6 +84,7 @@ const Agenda = {
     const i = ev.feitos.indexOf(data);
     if (i > -1) ev.feitos.splice(i, 1); else ev.feitos.push(data);
     Store.tocar(ev);
+    Vinculos.aoConcluir(ev, data, i === -1);
     Store.salvar();
     return i === -1;
   },
@@ -101,6 +103,8 @@ const Agenda = {
     ev.excecoes.push(data);
     ev.feitos = ev.feitos.filter((d) => d !== data);
     Store.tocar(ev);
+    const l = ev.valor && Vinculos.lancamento(ev, data);
+    if (l && !l.pago) Store.remover('lancamentos', l.id);
     Store.salvar();
   },
 };
@@ -110,6 +114,7 @@ const AgendaUI = {
   filtros() { return { status: ui.status, pessoa: ui.pessoa, busca: ui.busca }; },
 
   render() {
+    Vinculos.sincronizar();
     Cores.recalcular();
     this.renderModo();
     this.renderFiltros();
@@ -133,7 +138,8 @@ const AgendaUI = {
   },
 
   item({ ev, data, feito }) {
-    const meta = [ev.responsavel, ev.local, Perfil.rotulo(ev.conta || ev)].filter(Boolean).map(esc).join(' · ');
+    const valor = ev.valor ? `${Dinheiro.br(ev.valor)} · ${feito ? 'pago' : 'a pagar'}` : '';
+    const meta = [ev.responsavel, ev.local, valor, Perfil.rotulo(ev.conta || ev)].filter(Boolean).map(esc).join(' · ');
     return `<div class="ev${feito ? ' feito' : ''}${ev.conta ? ' conta' : ''}" data-id="${esc(ev.id)}" data-data="${data}" role="button" tabindex="0" style="--cor:${ev.conta ? 'var(--alert)' : Cores.pessoa(ev.responsavel)}">
       <div class="ev-hora">${ev.hora || '<small>dia</small>'}</div>
       <div>
@@ -141,7 +147,7 @@ const AgendaUI = {
         ${meta ? `<div class="ev-meta">${meta}</div>` : ''}
         ${ev.aviso && !feito ? `<div class="ev-aviso">${ICONE.sino}${Agenda.rotuloAviso(ev)}</div>` : ''}
       </div>
-      <button type="button" class="check" aria-label="${feito ? 'Marcar como pendente' : 'Marcar como concluído'}" aria-pressed="${feito}"></button>
+      <button type="button" class="check" aria-label="${feito ? (ev.valor ? 'Voltar para a pagar' : 'Marcar como pendente') : (ev.valor ? 'Marcar como pago' : 'Marcar como concluído')}" aria-pressed="${feito}"></button>
     </div>`;
   },
 
@@ -342,7 +348,8 @@ const AgendaUI = {
         const { id, data } = ev.dataset;
         const feito = Agenda.alternarFeito(id, data);
         if (navigator.vibrate) navigator.vibrate(12);
-        UI.toast(id.startsWith('conta:') ? (feito ? 'Conta paga' : 'Conta pendente') : feito ? 'Marcado como concluído' : 'Marcado como pendente');
+        const comValor = !id.startsWith('conta:') && Store.evento(id)?.valor;
+        UI.toast(id.startsWith('conta:') ? (feito ? 'Conta paga' : 'Conta pendente') : comValor ? (feito ? 'Pago · registrado no Financeiro' : 'Voltou para “a pagar”') : feito ? 'Marcado como concluído' : 'Marcado como pendente');
         this.render();
         return $(`.ev[data-id="${CSS.escape(id)}"][data-data="${data}"]`, this.el)?.classList.add('pulso');
       }
@@ -396,8 +403,13 @@ const EventoForm = {
         ${UI.campo('Avisar às', `<input type="time" name="aviso" value="${d.aviso}">`)}
         ${UI.campo('Repetir', `<select name="recorrencia">${opcoesRec}</select>`)}
       </div>
+      <div class="duas">
+        ${UI.campo('Valor (gasto)', `<input name="valor" value="${Dinheiro.campo(d.valor)}" inputmode="decimal" placeholder="Opcional" autocomplete="off">`)}
+        ${UI.campo('Categoria', `<input name="categoria" value="${esc(d.categoria || '')}" list="dl-categorias" placeholder="Opcional" maxlength="40" autocomplete="off">`)}
+      </div>
+      <p class="quem dica-valor">Com valor, vira despesa no Financeiro${repete ? ' a cada repetição' : ''}. Fica em aberto até ser concluído (pago).</p>
       ${UI.campo('Observação', `<textarea name="obs" maxlength="1000" placeholder="Opcional">${esc(d.obs)}</textarea>`)}
-      ${ev ? `<label class="interruptor">${repete ? `Concluído em ${Datas.br(oc)}` : 'Concluído'}<input type="checkbox" name="feito" ${ev.feitos.includes(oc) ? 'checked' : ''}></label>` : ''}
+      ${ev ? `<label class="interruptor">${ev.valor ? (repete ? `Pago em ${Datas.br(oc)}` : 'Pago') : repete ? `Concluído em ${Datas.br(oc)}` : 'Concluído'}<input type="checkbox" name="feito" ${ev.feitos.includes(oc) ? 'checked' : ''}></label>` : ''}
       ${ev && Perfil.detalhe(ev) ? `<p class="quem">${esc(Perfil.detalhe(ev))}</p>` : ''}
       <div class="botoes">
         ${ev ? '<button type="button" class="btn perigo" data-acao="excluir">Excluir</button>' : ''}
@@ -433,6 +445,8 @@ const EventoForm = {
       aviso: form.aviso.value,
       recorrencia: form.recorrencia.value,
       obs: form.obs.value,
+      valor: Dinheiro.parse(form.valor.value) || null,
+      categoria: form.categoria.value,
     });
   },
 
@@ -469,7 +483,10 @@ const EventoForm = {
     });
     if (!r) return;
     if (r === 'uma') Agenda.excluirOcorrencia(ev.id, oc);
-    else Store.remover('eventos', ev.id);
+    else {
+      Store.remover('eventos', ev.id);
+      Store.dados.lancamentos.filter((l) => l.evento === ev.id && !l.pago).forEach((l) => Store.remover('lancamentos', l.id));
+    }
     await UI.fechar();
     AgendaUI.render();
     UI.toast('Compromisso excluído');

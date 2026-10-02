@@ -1,7 +1,7 @@
 'use strict';
 
 /* Família Power · Financeiro: resumo, gráfico, lançamentos e contas fixas
-   Desenvolvido por Nicosheik Labs · © 2026 */
+   Desenvolvido por Nicoshake Labs · © 2026 */
 
 /* =========================================================
    FINANCEIRO
@@ -26,6 +26,7 @@ const Financeiro = {
 const FinUI = {
   render() {
     Fixas.gerar();
+    Vinculos.sincronizar();
     const mes = ui.finMes;
     const lista = Financeiro.doMes(mes);
     $('#finNav').innerHTML = AgendaUI.navegador(Datas.mesAno(mes + '-01'), 'Mês anterior', 'Próximo mês');
@@ -88,7 +89,7 @@ const FinUI = {
     const sinal = l.tipo === 'receita' ? '+' : '−';
     return `<div class="lc ${l.tipo}" data-id="${esc(l.id)}" role="button" tabindex="0" aria-label="${esc(l.descricao)}, ${sinal === '+' ? 'receita' : 'despesa'} de ${Dinheiro.br(l.valor)}, ${this.rotuloEstado(l)}">
       <div class="lc-dia" aria-hidden="true">${Number(l.data.slice(8))}</div>
-      <div><div class="lc-desc">${esc(l.descricao)}${l.fixa ? ' <span class="selo-fixa" title="Conta fixa">↻</span>' : ''}</div>${meta ? `<div class="lc-meta">${meta}</div>` : ''}
+      <div><div class="lc-desc">${esc(l.descricao)}${l.fixa ? ' <span class="selo-fixa" title="Conta fixa">↻</span>' : ''}${l.evento ? ' <span class="selo-fixa" title="Ligado a um compromisso">📅</span>' : ''}</div>${meta ? `<div class="lc-meta">${meta}</div>` : ''}
         <button type="button" class="estado${l.pago ? ' ok' : ''}" data-estado aria-pressed="${l.pago}" aria-label="${this.rotuloEstado(l)}. Toque para alternar">${this.rotuloEstado(l)}</button></div>
       <div class="lc-valor">${sinal} ${Dinheiro.br(l.valor)}</div>
     </div>`;
@@ -100,6 +101,7 @@ const FinUI = {
     if (!l) return;
     l.pago = !l.pago;
     Store.tocar(l);
+    Vinculos.aoPagar(l);
     if (!Store.salvar()) return;
     const botao = $('.estado', linhaEl);
     botao.classList.toggle('ok', l.pago);
@@ -157,6 +159,7 @@ const LancamentoForm = {
     };
     const lido = (campo) => (marcarLidos && sugestao && sugestao[campo] ? 'lido' : '');
     const fixa = d.fixa ? Store.dados.fixas.find((f) => f.id === d.fixa) : null;
+    const evLigado = d.evento ? Store.evento(d.evento) : null;
 
     const corpo = `<form class="form" novalidate>
       ${nota ? `<div class="nota-previa"><img src="${nota.url}" alt="Foto da nota"><span>Confira os dados. Campos em destaque foram lidos da nota; os vazios não foram encontrados.</span></div>` : ''}
@@ -175,7 +178,8 @@ const LancamentoForm = {
         ${UI.campo('Pessoa', `<input name="pessoa" value="${esc(d.pessoa)}" list="dl-pessoas" placeholder="Quem" maxlength="60" autocomplete="off">`)}
       </div>
       <label class="interruptor"><span class="rotulo-pago">${d.tipo === 'receita' ? 'Recebido' : 'Pago'}</span><input type="checkbox" name="pago" ${d.pago ? 'checked' : ''}></label>
-      <label class="interruptor"><span>Conta fixa <small class="dica-fixa">${fixa && fixa.ativo ? `todo dia ${fixa.dia}` : 'repete todo mês'}</small></span><input type="checkbox" name="fixa" ${fixa && fixa.ativo ? 'checked' : ''}></label>
+      ${evLigado ? `<p class="quem">📅 Ligado ao compromisso “${esc(evLigado.titulo)}”. Pagar aqui conclui o compromisso; valor e data se mudam no compromisso.</p>` : ''}
+      <label class="interruptor"${d.evento ? ' hidden' : ''}><span>Conta fixa <small class="dica-fixa">${fixa && fixa.ativo ? `todo dia ${fixa.dia}` : 'repete todo mês'}</small></span><input type="checkbox" name="fixa" ${fixa && fixa.ativo ? 'checked' : ''}></label>
       ${nota && nota.texto ? `<details class="texto-lido"><summary>Ver texto reconhecido</summary><pre>${esc(nota.texto)}</pre></details>` : ''}
       ${l && Perfil.detalhe(l) ? `<p class="quem">${esc(Perfil.detalhe(l))}</p>` : ''}
       <div class="botoes">
@@ -232,8 +236,10 @@ const LancamentoForm = {
       pessoa: form.pessoa.value,
       pago: form.pago.checked,
       fixa: atual ? atual.fixa : '',
+      evento: atual ? atual.evento : '',
     });
-    const aviso = Fixas.aplicarFormulario(item, form.fixa.checked);
+    const aviso = item.evento ? '' : Fixas.aplicarFormulario(item, form.fixa.checked);
+    if (item.evento && atual && atual.pago !== item.pago) Vinculos.aoPagar(item);
     if (!Store.gravar('lancamentos', item)) return;
     await UI.fecharTodas();
     if (aoSalvar) aoSalvar(item);
@@ -343,5 +349,83 @@ const FixasUI = {
       App.renderAba();
       UI.toast('Conta fixa encerrada');
     });
+  },
+};
+
+/* ---------- Compromissos com valor: cada ocorrência vira uma despesa ligada ----------
+   Compromisso em aberto = despesa "a pagar". Concluir o compromisso = pagar, e vice-versa. */
+const Vinculos = {
+  id: (ev, data) => (ev.recorrencia === 'nao' ? `ev-${ev.id}` : `ev-${ev.id}-${data}`),
+  inicio() { return Datas.hoje().slice(0, 8) + '01'; },
+  limite() { return Datas.somar(Datas.somarMeses(Datas.hoje(), 2), -1); }, /* fim do próximo mês */
+  datas(ev) {
+    if (ev.recorrencia === 'nao') return [ev.data];
+    const ini = ev.data > this.inicio() ? ev.data : this.inicio();
+    return Agenda.ocorrencias(ev, ini, this.limite());
+  },
+  lancamento(ev, data) { return Store.lancamento(this.id(ev, data)); },
+
+  /* Mantém evento e despesa coerentes (inclusive depois de sincronizar entre celulares). */
+  sincronizar() {
+    let mudou = false;
+    const validos = new Set();
+    for (const ev of Store.dados.eventos) {
+      if (!ev.valor) continue;
+      for (const data of this.datas(ev)) {
+        const id = this.id(ev, data);
+        validos.add(id);
+        const apagado = Store.dados.removidos[id];
+        if (apagado && apagado >= ev.atualizado) continue; /* apagado de propósito (vale até o compromisso ser editado) */
+        const feito = ev.feitos.includes(data);
+        let l = Store.lancamento(id);
+        if (!l) {
+          l = Modelo.lancamento({ id, data, descricao: ev.titulo, categoria: ev.categoria, pessoa: ev.responsavel, tipo: 'despesa', valor: ev.valor, pago: feito, evento: ev.id });
+          l.atualizado = apagado ? Date.now() : 1;
+          Store.dados.lancamentos.push(l);
+          mudou = true;
+          continue;
+        }
+        if (l.pago !== feito) {
+          if (l.atualizado > ev.atualizado) {
+            ev.feitos = l.pago ? [...ev.feitos, data] : ev.feitos.filter((d) => d !== data);
+            ev.atualizado = l.atualizado;
+          } else {
+            l.pago = feito;
+            l.atualizado = ev.atualizado;
+          }
+          mudou = true;
+        }
+        /* enquanto não foi pago, a despesa acompanha o compromisso */
+        if (!l.pago && (l.descricao !== ev.titulo || l.valor !== ev.valor || l.data !== data || l.categoria !== ev.categoria || l.pessoa !== ev.responsavel)) {
+          Object.assign(l, { descricao: ev.titulo, valor: ev.valor, data, categoria: ev.categoria, pessoa: ev.responsavel });
+          mudou = true;
+        }
+      }
+    }
+    /* despesas em aberto de compromissos apagados, sem valor ou que mudaram de data */
+    const desde = this.inicio();
+    for (const l of [...Store.dados.lancamentos]) {
+      if (!l.evento || l.pago || validos.has(l.id) || l.data < desde) continue;
+      Store.remover('lancamentos', l.id);
+    }
+    if (mudou) Store.salvar();
+  },
+
+  /* Pagou no Financeiro → conclui o compromisso daquele dia. */
+  aoPagar(l) {
+    if (!l || !l.evento) return;
+    const ev = Store.evento(l.evento);
+    if (!ev) return;
+    const data = l.data;
+    const tem = ev.feitos.includes(data);
+    if (l.pago && !tem) ev.feitos.push(data);
+    if (!l.pago && tem) ev.feitos = ev.feitos.filter((d) => d !== data);
+    Store.tocar(ev);
+  },
+  /* Concluiu na agenda → paga a despesa daquele dia. */
+  aoConcluir(ev, data, feito) {
+    if (!ev.valor) return;
+    const l = this.lancamento(ev, data);
+    if (l && l.pago !== feito) { l.pago = feito; Store.tocar(l); }
   },
 };
