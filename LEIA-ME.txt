@@ -57,3 +57,7 @@ VERSÃO 11
 VERSÃO 1.16
 - Compromisso com "Valor (gasto)": vira despesa "a pagar" no Financeiro
   (uma por repetição). Concluir o compromisso = pagar, e vice-versa.
+
+VERSÃO 1.17
+- Novo compromisso: "Toda semana" com vários dias (ex.: seg, qua, sex),
+  "Repetir até" (atalhos 4/8/12 semanas) e "Mais dias" (datas avulsas extras).

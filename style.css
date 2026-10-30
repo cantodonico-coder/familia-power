@@ -638,6 +638,20 @@ html.bloqueado body > :not(#tela-bloqueio):not(.aurora) { visibility: hidden; }
 .creditos .assinatura b { color: var(--brand-text); }
 .bloq-assinatura { margin-top: 18px !important; font-size: 12px; font-weight: 700; letter-spacing: .04em; color: var(--text-secondary); opacity: .8; }
 
+/* ===== Repetição do compromisso ===== */
+.repeticao { display: grid; gap: 14px; }
+.dias-semana { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.dia-sem { height: 42px; border-radius: 12px; background: var(--surface-2); font-weight: 800; color: var(--text-secondary); transition: background .2s, color .2s, transform .25s var(--mola); }
+.dia-sem:active { transform: scale(.9); }
+.dia-sem[aria-pressed="true"] { background: var(--grad-brand); color: var(--brand-ink); box-shadow: 0 8px 18px -8px var(--glow-60); }
+.ate-linha { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.ate-linha input { flex: 1 1 120px; }
+.ate-linha .chip { height: 40px; padding: 0 10px; }
+.extras-lista { display: flex; flex-wrap: wrap; gap: 6px; }
+.extras-lista:empty { display: none; }
+.extra-chip { display: inline-flex; align-items: center; gap: 4px; padding: 0 4px 0 12px; color: var(--text-primary); }
+.extra-chip button { width: 28px; height: 28px; border-radius: 8px; font-size: 18px; color: var(--text-secondary); }
+
 /* ===== Esqueleto (carregamento) ===== */
 .esqueleto { display: grid; gap: 12px; margin-top: 18px; }
 .esqueleto i { display: block; height: 48px; border-radius: 14px; background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface) 50%, var(--surface-2) 75%); background-size: 200% 100%; animation: brilho-esq 1.3s linear infinite; }

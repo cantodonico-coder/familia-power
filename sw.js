@@ -1,7 +1,7 @@
 'use strict';
 
 /* Suba a versão ao publicar mudanças no app. */
-const VERSAO = 'familia-v16';
+const VERSAO = 'familia-v17';
 const CACHE_OCR = 'familia-ocr-v1';
 
 const ARQUIVOS = [
