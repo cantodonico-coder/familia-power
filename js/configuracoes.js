@@ -1,7 +1,7 @@
 'use strict';
 
 /* Família Power · Backup e configurações
-   Desenvolvido por Nicoshake Labs · © 2026 */
+   NicoShake Labs · © 2026 */
 
 /* =========================================================
    BACKUP E CONFIGURAÇÕES
@@ -110,7 +110,7 @@ const Config = {
         <p class="rodape-nota">${Sync.cfg ? 'Seus dados ficam neste aparelho e no seu repositório privado do GitHub.' : 'Seus dados ficam somente neste aparelho.'}</p>
         <footer class="creditos">
           <b>${APP.nome}</b> · versão ${APP.versao}<br>Gestão de Compromissos e Despesas
-          <span class="assinatura">Desenvolvido por <b>${APP.desenvolvedora}</b></span>
+          <span class="assinatura"><b>${APP.desenvolvedora}</b></span>
         </footer>`,
     });
 

@@ -1,7 +1,7 @@
 'use strict';
 
 /* Família Power · Agenda: compromissos, recorrência, WhatsApp, calendário (.ics) e lembretes
-   Desenvolvido por Nicoshake Labs · © 2026 */
+   NicoShake Labs · © 2026 */
 
 /* =========================================================
    AGENDA

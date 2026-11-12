@@ -1,7 +1,7 @@
 'use strict';
 
 /* Família Power · Cozinha: lista de compras e cardápio (almoço e jantar)
-   Desenvolvido por Nicoshake Labs · © 2026 */
+   NicoShake Labs · © 2026 */
 
 /* =========================================================
    COZINHA: lista de compras e almoços da semana

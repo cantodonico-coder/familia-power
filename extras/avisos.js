@@ -1,5 +1,5 @@
 'use strict';
-/* Família Power (desenvolvido por Nicoshake Labs) — envia os avisos da agenda e das contas para os celulares,
+/* Família Power (NicoShake Labs) — envia os avisos da agenda e das contas para os celulares,
    mesmo com o app fechado. Roda no GitHub Actions do repositório privado de dados.
    Não imprime dados da família no log: só contagens. */
 const fs = require('fs');

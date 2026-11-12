@@ -1,7 +1,7 @@
 'use strict';
 
 /* Família Power · Financeiro: resumo, gráfico, lançamentos e contas fixas
-   Desenvolvido por Nicoshake Labs · © 2026 */
+   NicoShake Labs · © 2026 */
 
 /* =========================================================
    FINANCEIRO
