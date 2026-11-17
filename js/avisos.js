@@ -1,7 +1,7 @@
 'use strict';
 
 /* Família Power · Avisos com o app fechado (Web Push + GitHub Actions)
-   NicoShake Labs · © 2026 */
+   Inovação Labs · © 2026 */
 
 /* =========================================================
    AVISOS COM O APP FECHADO (Web Push + GitHub Actions no repositório privado)

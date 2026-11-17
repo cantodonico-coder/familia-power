@@ -1,7 +1,7 @@
 'use strict';
 
 /* Família Power · Backup e configurações
-   NicoShake Labs · © 2026 */
+   Inovação Labs · © 2026 */
 
 /* =========================================================
    BACKUP E CONFIGURAÇÕES

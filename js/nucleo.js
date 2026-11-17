@@ -1,11 +1,11 @@
 'use strict';
 
 /* Família Power · Núcleo: utilidades, datas, dinheiro, modelos, armazenamento, tema e interface base
-   NicoShake Labs · © 2026 */
+   Inovação Labs · © 2026 */
 
 
 /* ---------- Utilitários ---------- */
-const APP = { nome: 'Família Power', versao: '1.16', desenvolvedora: 'NicoShake Labs' };
+const APP = { nome: 'Família Power', versao: '1.16', desenvolvedora: 'Inovação Labs' };
 
 const $ = (sel, raiz = document) => raiz.querySelector(sel);
 const $$ = (sel, raiz = document) => [...raiz.querySelectorAll(sel)];

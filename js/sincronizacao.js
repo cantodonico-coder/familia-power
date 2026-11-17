@@ -1,7 +1,7 @@
 'use strict';
 
 /* Família Power · Sincronização da família pelo GitHub
-   NicoShake Labs · © 2026 */
+   Inovação Labs · © 2026 */
 
 /* =========================================================
    SINCRONIZAÇÃO DA FAMÍLIA (arquivo JSON num repositório PRIVADO do GitHub)

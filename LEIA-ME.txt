@@ -1,5 +1,5 @@
 FAMÍLIA POWER — Gestão de Compromissos e Despesas
-Desenvolvido por Nicoshake Labs
+Desenvolvido por Inovação Labs
 Como publicar
 
 1. Envie a pasta inteira para uma hospedagem estática com HTTPS

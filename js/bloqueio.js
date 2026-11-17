@@ -1,7 +1,7 @@
 'use strict';
 
 /* Família Power · Bloqueio com PIN
-   NicoShake Labs · © 2026 */
+   Inovação Labs · © 2026 */
 
 /* =========================================================
    BLOQUEIO COM PIN (só neste aparelho)
